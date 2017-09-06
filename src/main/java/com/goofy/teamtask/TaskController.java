@@ -1,20 +1,34 @@
 package com.goofy.teamtask;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class TaskController {
 
 
     @Autowired
-    private TaskProperties taskProperties;
+    private TaskRepository taskRepository;
 
     //RequestMapping + Request.Method.Get == GetMapping
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String sayHi() {
-        return taskProperties.getTask();
+    /*
+    * create a task
+    *
+    * */
+    @PostMapping(value = "/tasks")
+    public Task createTask(@RequestParam("taskName") String taskName, @RequestParam("taskDescription") String taskDescription) {
+        Task task = new Task();
+        task.setTaskName(taskName);
+        task.setTaskDescription(taskDescription);
+        return taskRepository.save(task);
+    }
+
+    //get all task
+    @GetMapping(value = "/tasks")
+    public List<Task> getTaskById(){
+
+        return taskRepository.findAll();
     }
 }
